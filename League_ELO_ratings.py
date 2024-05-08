@@ -24,19 +24,19 @@ def remove_dates(data, start_date):
     #print(row_date)
     #print(start_date<date(2024,12,12))
     return data
-kraje = ["POL", "GER", "FRA"]
-daty = [date(1970,1,1), date(1980,1,1), date(1990,1,1)]
-numbs = [5,2,20]
-testing = {kraj:{data:[numbs[0], numbs[1]] for data in daty} for kraj in kraje}
-print(testing)
+#kraje = ["POL", "GER", "FRA"]
+#daty = [date(1970,1,1), date(1980,1,1), date(1990,1,1)]
+#numbs = [5,2,20]
+#testing = {kraj:{data:[numbs[0], numbs[1]] for data in daty} for kraj in kraje}
+#print(testing)
 def make_average(dict):
     for count in dict.keys():
         for value in dict[count].keys():
             if dict[count][value][1]!=0:
                 dict[count][value] = dict[count][value][0]/dict[count][value][1]
     return dict
-testing = make_average(testing)
-print(testing)
+#testing = make_average(testing)
+#print(testing)
 
 base_url = "http://api.clubelo.com/"
 
@@ -75,7 +75,7 @@ print(type(dane["From"][1]))"""
 country_list = ["FRA", "GER", "ENG", "ITA", "ESP"]
 today = date.today()
 print(today)
-country_dicts = {country:{date(1970, 1, 1) + timedelta(days=day):[0,0,[]] for day in range((date(today.year, 12, 31)-date(1970,1,1)).days + 1)} for country in country_list}
+country_dicts = {country:{date(1970, 1, 1) + timedelta(days=day):[0,0] for day in range((date(today.year, 12, 31)-date(1970,1,1)).days + 1)} for country in country_list}
 hej = datetime.strptime("1997-12-12", '%Y-%m-%d').date()
 print(hej)
 print(type(hej))
@@ -108,19 +108,21 @@ for club in teams:
             for j in range (x+1):
                 country_dicts[kraj][first_date+timedelta(days=j)][0] += float(dane["Elo"][i])
                 country_dicts[kraj][first_date + timedelta(days=j)][1] += 1
-                country_dicts[kraj][first_date + timedelta(days=j)][2].append(club)
                 #print(country_dicts[kraj][first_date+timedelta(days=j)])
         #country_dicts[dane["Country"]][]
     #print(dane)
-#country_dicts = make_average(country_dicts)
+country_dicts = make_average(country_dicts)
+
 rows = []
 for country, dates in country_dicts.items():
     for date, values in dates.items():
-        row = {'Country': country, 'Date': date, 'Elo Sum': values[0], 'Number of Teams': values[1], 'Clubs': values[2]}
+        row = {'Country': country, 'Date': date, 'Average ELO': values}
         rows.append(row)
 
 # Convert the list of dictionaries to a DataFrame
 df = pandas.DataFrame(rows)
+
+df['Date'] = pandas.to_datetime(df['Date'])
 
 # Save the DataFrame to a CSV file
 df.to_csv('elo_ratings.csv', index=False)
