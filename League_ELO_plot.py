@@ -4,11 +4,9 @@ import matplotlib.dates as mdates
 
 plt.ion()
 
-
-
 plt.figure(figsize=(10,6))
 
-#plt.style.use('seaborn-darkgrid')
+plt.style.use('seaborn-v0_8-dark')
 df = pandas.read_csv('elo_ratings.csv', delimiter=',', parse_dates=['Date'])
 
 plt.xlim(df['Date'].min(), df['Date'].max())
@@ -32,4 +30,3 @@ plt.savefig('chart.png', dpi= 500)
 
 # Show the plot
 plt.show(block= True)
-
